@@ -19,7 +19,7 @@ vfloat = std.vector(float)
 
 #----function to book histos
 def bookHistos(histos,run):
-    histos["amp_max_B1"]=ROOT.TH1F("h_amp_max_B1","h_amp_max_B1",10000,0,16000);
+    histos["amp_max_B1"]=ROOT.TH1F("h_amp_max_B1","h_amp_max_B1",1000,0,16000);
 
 #-----main function-----
 def main():
@@ -58,7 +58,7 @@ def main():
     
 #----loop over entries-----
     for entry in tree:
-        if entry.index % 1000 ==0:
+        if entry.index % 4000 ==0:
             print "Analyzing event:"
             print entry.index
         
@@ -73,7 +73,8 @@ def main():
             c1.SaveAs(outPath+str(x)+format)
             c1.SetLogy()
             c1.SaveAs(outPath+str(x)+"_log"+format)
-            c1.Delete()
+            c1.SetLogy(0)
+        c1.Delete()
 
     outfile.Write()
     outfile.Close()

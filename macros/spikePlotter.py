@@ -32,12 +32,12 @@ def bookHistos(histos,run):
     histos["tot_25perc_max_B1"]=ROOT.TH1F("tot_25perc_max_B1","tot_25perc_max_B1",200,-0.5,199.5)
     histos["tot_50perc_max_B1"]=ROOT.TH1F("tot_50perc_max_B1","tot_50perc_max_B1",200,-0.5,199.5)
     histos["tot_75perc_max_B1"]=ROOT.TH1F("tot_75perc_max_B1","tot_75perc_max_B1",200,-0.5,199.5)
-    histos["sample_max_minus1_over_sample_max_B1"]=ROOT.TH1F("sample_max_minus1_over_sample_max_B1","sample_max_minus1_over_sample_max_B1",100,-3,3)
-    histos["sample_max_minus2_over_sample_max_B1"]=ROOT.TH1F("sample_max_minus2_over_sample_max_B1","sample_max_minus2_over_sample_max_B1",100,-3,3)
-    histos["sample_max_minus3_over_sample_max_B1"]=ROOT.TH1F("sample_max_minus3_over_sample_max_B1","sample_max_minus3_over_sample_max_B1",100,-3,3)
-    histos["sample_max_plus1_over_sample_max_B1"]=ROOT.TH1F("sample_max_plus1_over_sample_max_B1","sample_max_plus1_over_sample_max_B1",100,-3,3)
-    histos["sample_max_plus2_over_sample_max_B1"]=ROOT.TH1F("sample_max_plus2_over_sample_max_B1","sample_max_plus2_over_sample_max_B1",100,-3,3)
-    histos["sample_max_plus3_over_sample_max_B1"]=ROOT.TH1F("sample_max_plus3_over_sample_max_B1","sample_max_plus3_over_sample_max_B1",100,-3,3)
+    histos["sample_max_minus1_over_sample_max_B1"]=ROOT.TH1F("sample_max_minus1_over_sample_max_B1","sample_max_minus1_over_sample_max_B1",50,-3,3)
+    histos["sample_max_minus2_over_sample_max_B1"]=ROOT.TH1F("sample_max_minus2_over_sample_max_B1","sample_max_minus2_over_sample_max_B1",50,-3,3)
+    histos["sample_max_minus3_over_sample_max_B1"]=ROOT.TH1F("sample_max_minus3_over_sample_max_B1","sample_max_minus3_over_sample_max_B1",50,-3,3)
+    histos["sample_max_plus1_over_sample_max_B1"]=ROOT.TH1F("sample_max_plus1_over_sample_max_B1","sample_max_plus1_over_sample_max_B1",50,-3,3)
+    histos["sample_max_plus2_over_sample_max_B1"]=ROOT.TH1F("sample_max_plus2_over_sample_max_B1","sample_max_plus2_over_sample_max_B1",50,-3,3)
+    histos["sample_max_plus3_over_sample_max_B1"]=ROOT.TH1F("sample_max_plus3_over_sample_max_B1","sample_max_plus3_over_sample_max_B1",50,-3,3)
     histos["t_undershoot_minus_t_sample_max_B1"]=ROOT.TH1F("t_undershoot_minus_t_sample_max_B1","t_undershoot_minus_t_sample_max_B1",100,0,100)
     histos["t_3sigma_noise_minus_t_sample_max_B1"]=ROOT.TH1F("t_3sigma_noise_minus_t_sample_max_B1","t_3sigma_noise_minus_t_sample_max_B1",30,-0.5,29.5)
 
@@ -106,6 +106,7 @@ def main():
             histos["sample_max_minus2_over_sample_max_B1"].Fill(entry.sample_max_minus2_over_sample_max[entry.B1]);
             histos["sample_max_minus3_over_sample_max_B1"].Fill(entry.sample_max_minus3_over_sample_max[entry.B1]);
             histos["sample_max_plus1_over_sample_max_B1"].Fill(entry.sample_max_plus1_over_sample_max[entry.B1]);
+            histos["sample_max_plus2_over_sample_max_B1"].Fill(entry.sample_max_plus2_over_sample_max[entry.B1]);
             histos["sample_max_plus3_over_sample_max_B1"].Fill(entry.sample_max_plus3_over_sample_max[entry.B1]);
             histos["t_undershoot_minus_t_sample_max_B1"].Fill(entry.t_undershoot_minus_t_sample_max[entry.B1]);
             histos["t_3sigma_noise_minus_t_sample_max_B1"].Fill(entry.t_3sigma_noise_minus_t_sample_max[entry.B1]);
@@ -125,6 +126,7 @@ def main():
             histos["sample_max_minus2_over_sample_max_B1_spike"].Fill(entry.sample_max_minus2_over_sample_max[entry.B1]);
             histos["sample_max_minus3_over_sample_max_B1_spike"].Fill(entry.sample_max_minus3_over_sample_max[entry.B1]);
             histos["sample_max_plus1_over_sample_max_B1_spike"].Fill(entry.sample_max_plus1_over_sample_max[entry.B1]);
+            histos["sample_max_plus2_over_sample_max_B1_spike"].Fill(entry.sample_max_plus2_over_sample_max[entry.B1]);
             histos["sample_max_plus3_over_sample_max_B1_spike"].Fill(entry.sample_max_plus3_over_sample_max[entry.B1]);
             histos["t_undershoot_minus_t_sample_max_B1_spike"].Fill(entry.t_undershoot_minus_t_sample_max[entry.B1]);
             histos["t_3sigma_noise_minus_t_sample_max_B1_spike"].Fill(entry.t_3sigma_noise_minus_t_sample_max[entry.B1]);
@@ -137,13 +139,15 @@ def main():
             histos[x].GetXaxis().SetTitle(x)
             histos[x+"_spike"].GetXaxis().SetTitle(x)
             histos[x+"_spike"].SetLineColor(ROOT.kRed)
+            histos[x+"_spike"].SetMarkerColor(ROOT.kRed)
             histos[x+"_spike"].SetLineWidth(2)
+            histos[x+"_spike"].SetMarkerStyle(1)
             if histos[x].GetMaximum()<histos[x+"_spike"].GetMaximum():
                 histos[x].DrawNormalized()
-                histos[x+"_spike"].DrawNormalized("same")
+                histos[x+"_spike"].DrawNormalized("samehiste")
             else:
-                histos[x+"_spike"].DrawNormalized()
-                histos[x].DrawNormalized("same")
+                histos[x+"_spike"].DrawNormalized("histe")
+                histos[x].DrawNormalized("samehist")
             for format in ".png",".pdf",".C":
                 c1.SaveAs(outPath+str(x)+format)
                 c1.SetLogy()

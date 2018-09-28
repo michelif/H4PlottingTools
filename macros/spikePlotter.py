@@ -19,7 +19,31 @@ vfloat = std.vector(float)
 
 #----function to book histos
 def bookHistos(histos,run):
-    histos["amp_max_B1"]=ROOT.TH1F("h_amp_max_B1","h_amp_max_B1",1000,0,16000);
+    histos["amp_max_B1"]=ROOT.TH1F("amp_max_B1","amp_max_B1",1000,0,16000)
+    histos["amp_max_B1_zoom"]=ROOT.TH1F("amp_max_B1_zoom","amp_max_B1_zoom",100,0,300)
+    histos["amp_sum_matrix_B1"]=ROOT.TH1F("amp_sum_matrix_B1","amp_sum_matrix_B1",500,0,600)
+    histos["n_swiss_cross_neighbours_B1"]=ROOT.TH1F("n_swiss_cross_neighbours_B1","n_swiss_cross_neighbours_B1",5,-0.5,4.5)
+    histos["swiss_cross_B1"]=ROOT.TH1F("swiss_cross_B1","swiss_cross_B1",100,-10,10)
+    histos["n_channels_3by3_B1"]=ROOT.TH1F("n_channels_3by3_B1","n_channels_3by3_B1",5,-0.5,4.5)
+    histos["amp_sum_3by3_B1"]=ROOT.TH1F("amp_sum_3by3_B1","amp_sum_3by3_B1",500,0,600)
+    histos["n_samples_above_25perc_max_B1"]=ROOT.TH1F("n_samples_above_25perc_max_B1","n_samples_above_25perc_max_B1",25,-0.5,24.5)
+    histos["n_samples_above_50perc_max_B1"]=ROOT.TH1F("n_samples_above_50perc_max_B1","n_samples_above_50perc_max_B1",25,-0.5,24.5)
+    histos["n_samples_above_75perc_max_B1"]=ROOT.TH1F("n_samples_above_75perc_max_B1","n_samples_above_75perc_max_B1",25,-0.5,24.5)
+    histos["tot_25perc_max_B1"]=ROOT.TH1F("tot_25perc_max_B1","tot_25perc_max_B1",200,-0.5,199.5)
+    histos["tot_50perc_max_B1"]=ROOT.TH1F("tot_50perc_max_B1","tot_50perc_max_B1",200,-0.5,199.5)
+    histos["tot_75perc_max_B1"]=ROOT.TH1F("tot_75perc_max_B1","tot_75perc_max_B1",200,-0.5,199.5)
+    histos["sample_max_minus1_over_sample_max_B1"]=ROOT.TH1F("sample_max_minus1_over_sample_max_B1","sample_max_minus1_over_sample_max_B1",100,-3,3)
+    histos["sample_max_minus2_over_sample_max_B1"]=ROOT.TH1F("sample_max_minus2_over_sample_max_B1","sample_max_minus2_over_sample_max_B1",100,-3,3)
+    histos["sample_max_minus3_over_sample_max_B1"]=ROOT.TH1F("sample_max_minus3_over_sample_max_B1","sample_max_minus3_over_sample_max_B1",100,-3,3)
+    histos["sample_max_plus1_over_sample_max_B1"]=ROOT.TH1F("sample_max_plus1_over_sample_max_B1","sample_max_plus1_over_sample_max_B1",100,-3,3)
+    histos["sample_max_plus2_over_sample_max_B1"]=ROOT.TH1F("sample_max_plus2_over_sample_max_B1","sample_max_plus2_over_sample_max_B1",100,-3,3)
+    histos["sample_max_plus3_over_sample_max_B1"]=ROOT.TH1F("sample_max_plus3_over_sample_max_B1","sample_max_plus3_over_sample_max_B1",100,-3,3)
+    histos["t_undershoot_minus_t_sample_max_B1"]=ROOT.TH1F("t_undershoot_minus_t_sample_max_B1","t_undershoot_minus_t_sample_max_B1",100,0,100)
+    histos["t_3sigma_noise_minus_t_sample_max_B1"]=ROOT.TH1F("t_3sigma_noise_minus_t_sample_max_B1","t_3sigma_noise_minus_t_sample_max_B1",30,-0.5,29.5)
+
+    for x in histos.keys():
+        nbins = histos[x].GetNbinsX()
+        histos[x+"_spike"]=ROOT.TH1F(x+"_spike",x+"_spike",nbins,histos[x].GetXaxis().GetBinLowEdge(1),histos[x].GetXaxis().GetBinUpEdge(nbins))
 
 #-----main function-----
 def main():
@@ -61,20 +85,71 @@ def main():
         if entry.index % 4000 ==0:
             print "Analyzing event:"
             print entry.index
+
         
-        histos["amp_max_B1"].Fill(entry.amp_max[entry.B1])
+#fill histos
+        histos["amp_max_B1"].Fill(entry.amp_max[entry.B1])        
+        histos["amp_max_B1_zoom"].Fill(entry.amp_max[entry.B1])        
+        if entry.amp_max[entry.B1]<150:    
+            histos["amp_sum_matrix_B1"].Fill(entry.amp_sum_matrix[entry.B1]);
+            histos["n_swiss_cross_neighbours_B1"].Fill(entry.n_swiss_cross_neighbours[entry.B1]);
+            histos["swiss_cross_B1"].Fill(entry.swiss_cross[entry.B1]);
+            histos["n_channels_3by3_B1"].Fill(entry.n_channels_3by3[entry.B1]);
+            histos["amp_sum_3by3_B1"].Fill(entry.amp_sum_3by3[entry.B1]);
+            histos["n_samples_above_25perc_max_B1"].Fill(entry.n_samples_above_25perc_max[entry.B1]);
+            histos["n_samples_above_50perc_max_B1"].Fill(entry.n_samples_above_50perc_max[entry.B1]);
+            histos["n_samples_above_75perc_max_B1"].Fill(entry.n_samples_above_75perc_max[entry.B1]);
+            histos["tot_25perc_max_B1"].Fill(entry.tot_25perc_max[entry.B1]);
+            histos["tot_50perc_max_B1"].Fill(entry.tot_50perc_max[entry.B1]);
+            histos["tot_75perc_max_B1"].Fill(entry.tot_75perc_max[entry.B1]);
+            histos["sample_max_minus1_over_sample_max_B1"].Fill(entry.sample_max_minus1_over_sample_max[entry.B1]);
+            histos["sample_max_minus2_over_sample_max_B1"].Fill(entry.sample_max_minus2_over_sample_max[entry.B1]);
+            histos["sample_max_minus3_over_sample_max_B1"].Fill(entry.sample_max_minus3_over_sample_max[entry.B1]);
+            histos["sample_max_plus1_over_sample_max_B1"].Fill(entry.sample_max_plus1_over_sample_max[entry.B1]);
+            histos["sample_max_plus3_over_sample_max_B1"].Fill(entry.sample_max_plus3_over_sample_max[entry.B1]);
+            histos["t_undershoot_minus_t_sample_max_B1"].Fill(entry.t_undershoot_minus_t_sample_max[entry.B1]);
+            histos["t_3sigma_noise_minus_t_sample_max_B1"].Fill(entry.t_3sigma_noise_minus_t_sample_max[entry.B1]);
+        else:
+            histos["amp_sum_matrix_B1_spike"].Fill(entry.amp_sum_matrix[entry.B1]);
+            histos["n_swiss_cross_neighbours_B1_spike"].Fill(entry.n_swiss_cross_neighbours[entry.B1]);
+            histos["swiss_cross_B1_spike"].Fill(entry.swiss_cross[entry.B1]);
+            histos["n_channels_3by3_B1_spike"].Fill(entry.n_channels_3by3[entry.B1]);
+            histos["amp_sum_3by3_B1_spike"].Fill(entry.amp_sum_3by3[entry.B1]);
+            histos["n_samples_above_25perc_max_B1_spike"].Fill(entry.n_samples_above_25perc_max[entry.B1]);
+            histos["n_samples_above_50perc_max_B1_spike"].Fill(entry.n_samples_above_50perc_max[entry.B1]);
+            histos["n_samples_above_75perc_max_B1_spike"].Fill(entry.n_samples_above_75perc_max[entry.B1]);
+            histos["tot_25perc_max_B1_spike"].Fill(entry.tot_25perc_max[entry.B1]);
+            histos["tot_50perc_max_B1_spike"].Fill(entry.tot_50perc_max[entry.B1]);
+            histos["tot_75perc_max_B1_spike"].Fill(entry.tot_75perc_max[entry.B1]);
+            histos["sample_max_minus1_over_sample_max_B1_spike"].Fill(entry.sample_max_minus1_over_sample_max[entry.B1]);
+            histos["sample_max_minus2_over_sample_max_B1_spike"].Fill(entry.sample_max_minus2_over_sample_max[entry.B1]);
+            histos["sample_max_minus3_over_sample_max_B1_spike"].Fill(entry.sample_max_minus3_over_sample_max[entry.B1]);
+            histos["sample_max_plus1_over_sample_max_B1_spike"].Fill(entry.sample_max_plus1_over_sample_max[entry.B1]);
+            histos["sample_max_plus3_over_sample_max_B1_spike"].Fill(entry.sample_max_plus3_over_sample_max[entry.B1]);
+            histos["t_undershoot_minus_t_sample_max_B1_spike"].Fill(entry.t_undershoot_minus_t_sample_max[entry.B1]);
+            histos["t_3sigma_noise_minus_t_sample_max_B1_spike"].Fill(entry.t_3sigma_noise_minus_t_sample_max[entry.B1]);
 
-    
 
-    for x in histos:
+    for x in histos.keys():
         c1 = ROOT.TCanvas()
-        histos[x].Draw()
-        for format in ".png",".pdf",".C":
-            c1.SaveAs(outPath+str(x)+format)
-            c1.SetLogy()
-            c1.SaveAs(outPath+str(x)+"_log"+format)
-            c1.SetLogy(0)
-        c1.Delete()
+        if "spike" not in x:
+            histos[x].SetLineWidth(2)
+            histos[x].GetXaxis().SetTitle(x)
+            histos[x+"_spike"].GetXaxis().SetTitle(x)
+            histos[x+"_spike"].SetLineColor(ROOT.kRed)
+            histos[x+"_spike"].SetLineWidth(2)
+            if histos[x].GetMaximum()<histos[x+"_spike"].GetMaximum():
+                histos[x].DrawNormalized()
+                histos[x+"_spike"].DrawNormalized("same")
+            else:
+                histos[x+"_spike"].DrawNormalized()
+                histos[x].DrawNormalized("same")
+            for format in ".png",".pdf",".C":
+                c1.SaveAs(outPath+str(x)+format)
+                c1.SetLogy()
+                c1.SaveAs(outPath+str(x)+"_log"+format)
+                c1.SetLogy(0)
+            c1.Delete()
 
     outfile.Write()
     outfile.Close()
